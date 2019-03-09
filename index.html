@@ -44,7 +44,7 @@
   <div class="content" id="home">
     Home page
     <br>
-    <input type="text" id="subject" placeholder="Enter Status or Ward"><br>
+    <input type="text" id="searchItem" placeholder="Enter Status or Ward"><br>
     <select id="selectOption">
         <option value="Ward">Ward</option>
         <option value="Status">Status</option>
@@ -94,7 +94,7 @@
 
 
       $(document).ready(function() {
-        var apiEnd = "https://data.cityofchicago.org/resource/cdmx-wzbz.json";
+        var dataBaseApi = "https://data.cityofchicago.org/resource/cdmx-wzbz.json";
         $("#home").show();
 
 
@@ -120,12 +120,27 @@
 
         $("#searchData").on("click", function() {
           var option = $("#selectOption").val();
+          var temp;
+          var apiEnd = dataBaseApi;
+          $("#cards").empty();
           if(option == "Ward"){
-              
+              temp = $("#searchItem").val();
+              apiEnd = apiEnd + "?ward=";
           }
-          else{
-              
-          }
+          else if(option == "Status"){
+              if($("#searchItem").val().toUpperCase() == "COMPLETED"){
+                  temp = "Completed";
+              }
+              else if($("#searchItem").val().toUpperCase() == "OPEN"){
+                  temp = "Open";
+              }
+              apiEnd = apiEnd + "?status="
+         }
+         apiEnd += temp;
+         console.log(apiEnd);
+         $.get(apiEnd, function(fileData){
+             $("#cards").append("<h1>Query returned " + fileData.length + " records</h1>");
+         });
           
           
           
