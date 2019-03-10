@@ -62,9 +62,10 @@
 	<div class="card template" style="width: 18rem;">
 		<div class="card-body">
 			<h4 class="address">Card title</h4>
-			<h5 class="serviceRquest">Card subtitle</h5>
+			<h5 class="serviceRequest">Card subtitle</h5>
             <p class="location">Card subtitle</p>
             <h6 class="date">Card subtitle</h6>
+            <h6 class="surface">Card subtitle</h6>
             <h6 class="graftStatus">Card subtitle</h6>
             <h6 class="dateCompleted">Card subtitle</h6>
 			<a href="#" class="card-link">Card link</a>
@@ -150,8 +151,9 @@
              $.each(data, function(i,v){
                 var cloneCard = $(".template").clone();
                 cloneCard.find(".address").text(v.street_address);
-                cloneCard.find(".serviceRequest").text(v.street_address);
-                cloneCard.find(".location").text(v.street_address);
+                cloneCard.find(".serviceRequest").text(v.service_request_number);
+                cloneCard.find(".surface").text(v.what_type_of_surface_is_the_graffiti_on_);
+                cloneCard.find(".location").text(v.where_is_the_graffiti_located_);
                 cloneCard.find(".date").text(v.creation_date);
                 cloneCard.find(".graftStatus").text(v.status);
                 if(v.completion_date){
@@ -160,8 +162,8 @@
                 else{
                     cloneCard.find(".dateCompleted").text("");
                 }
-                clone.removeClass("template");
-                $("#cards").append(clone);
+                cloneCard.removeClass("template");
+                $("#cards").append(cloneCard);
              });
          });
           
