@@ -63,7 +63,7 @@
       
   </div>
   <div class="content" id="list">
-    List
+    <h2><b>List View</b></h2>
       <div id="cards"></div>
 
 	<div class="card template" style="width: 18rem;">
@@ -81,7 +81,7 @@
 	</div>
   </div>
   <div class="content" id="map">
-    This is map <br>
+    <h2><b>Map View</b></h2> <br>
   </div>
   <div class="content" id="about">
       <h1>About Page</h1>
@@ -112,14 +112,16 @@
         $("#home").show();
 
 
-        function hideScreens() {
+        function hide() {
           $(".content").hide();
         }
 
-
+        function startMap(){
+            var startLocation = {lat:41.8781, lng:-87.6298};
+        }
 
         $(".nav-link").on("click", function(){
-          hideScreens();
+          hide();
           var target = $(this).attr("href");
           $(target).show();
 
@@ -148,7 +150,7 @@
               else if($("#searchItem").val().toUpperCase() == "OPEN"){
                   temp = "Open";
               }
-              apiEnd = apiEnd + "?status="
+              apiEnd = apiEnd + "?status=";
          }
          apiEnd += temp;
          console.log(apiEnd);
@@ -172,13 +174,15 @@
                 cloneCard.removeClass("template");
                 $("#cards").append(cloneCard);
              });
+             
          });
+         hide();
+         $("#list").show();
           
           
-          
-          
+         
         });
-
+        
       });
     </script>
 
