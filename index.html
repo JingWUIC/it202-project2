@@ -145,18 +145,24 @@
             else{
                 var location = {lat: parseFloat(data[0].latitude), lng: parseFloat(data[0].longitude)};
                 var createMap = new google.maps.Map(document.getElementById('mapView'), {zoom: 12, center: location});
-                var iconUrl = 'https://maps.google.com/mapfiles/kml/shapes/';
+                var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
                     $.each(data, function(i,v){
                         
                         var local = {lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)};
                         var marker;
                         if(data[i].status == "Completed"){
-                            marker = new google.maps.Marker({position: local, map: createMap, icon: iconUrl + 'parking_lot_maps.png'});
+                            marker = new google.maps.Marker({position: local, map: createMap, icon: iconBase + 'parking_lot_maps.png'});
                         }
                         else{
-                            marker = new google.maps.Marker({position: local, map: createMap, icon: iconUrl + 'info-i_maps.png'});
+                            marker = new google.maps.Marker({position: local, map: createMap, icon: iconBase + 'info-i_maps.png'});
                         }
-                        
+                        var graftDescription = "<b>Street address</b>: " + data[i].street_address + "<br>" + "<b>Service Request Number</b>: " + data[i].service_request_number + "<br>" + "<b>Type of Surface</b>: " + data[i].what_type_of_surface_is_the_graffiti_on_ + "<br>" + "<b>Graffiti Location</b>: " + data[i].where_is_the_graffiti_located_ + "<br>" + "<b>Status</b>: " +  data[i].status + "<br>" + "<b>Creation Date</b>: " + data[i].creation_date; 
+                        if(data[i].status == "Completed"){
+                           graftDescription += "<br><b>Completion Date</b>: " + data[i].completion_date;
+                        }
+                        var infowindow = new google.maps.InfoWindow({content: graftDescription});
+                        marker.addListener('click', function() {infowindow.open(map, marker);
+                        });
                     });
                
                     
@@ -189,14 +195,14 @@
              displayMap(fileData);
              $.each(data, function(i,v){
                 var cloneCard = $(".template").clone();
-                cloneCard.find(".address").text(v.street_address);
-                cloneCard.find(".serviceRequest").text(v.service_request_number);
-                cloneCard.find(".surface").text(v.what_type_of_surface_is_the_graffiti_on_);
-                cloneCard.find(".location").text(v.where_is_the_graffiti_located_);
-                cloneCard.find(".date").text(v.creation_date);
-                cloneCard.find(".graftStatus").text(v.status);
+                cloneCard.find(".address").text("Street address: " + v.street_address);
+                cloneCard.find(".serviceRequest").text("Service Request Number: " + v.service_request_number);
+                cloneCard.find(".surface").text("Type of Surface: " + v.what_type_of_surface_is_the_graffiti_on_);
+                cloneCard.find(".location").text("Graffiti Location: " + v.where_is_the_graffiti_located_);
+                cloneCard.find(".date").text("Creation Date: " + v.creation_date);
+                cloneCard.find(".graftStatus").text("Status: " +v.status);
                 if(v.completion_date){
-                    cloneCard.find(".dateCompleted").text(v.completion_date);
+                    cloneCard.find(".dateCompleted").text("Completion Date: " +v.completion_date);
                 }
                 else{
                     cloneCard.find(".dateCompleted").text("");
