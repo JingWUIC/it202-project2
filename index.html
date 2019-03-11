@@ -21,6 +21,7 @@
             height: 400px;
             width: 100%;
         }
+       
 	</style>
 
 </head>
@@ -113,11 +114,7 @@
     </script>
     <script>
 
-     function initMap(){
-            var startLocation = {lat: 41.8781, lng: -87.6298};
-            var createMap = new google.maps.Map(document.getElementById('mapView'), {zoom: 11, center: startLocation});
-            
-     }
+     
 
 
       $(document).ready(function() {
@@ -148,12 +145,18 @@
             else{
                 var location = {lat: parseFloat(data[0].latitude), lng: parseFloat(data[0].longitude)};
                 var createMap = new google.maps.Map(document.getElementById('mapView'), {zoom: 12, center: location});
-               
+                var iconUrl = 'https://maps.google.com/mapfiles/kml/shapes/';
                     $.each(data, function(i,v){
-                        var local = {lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)};
                         
-                        var marker = new google.maps.Marker({position: local, map: createMap});
-                        mark.
+                        var local = {lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)};
+                        var marker;
+                        if(data[i].status == "Completed"){
+                            marker = new google.maps.Marker({position: local, map: createMap, icon: iconUrl + 'parking_lot_maps.png'});
+                        }
+                        else{
+                            marker = new google.maps.Marker({position: local, map: createMap, icon: iconUrl + 'info-i_maps.png'});
+                        }
+                        
                     });
                
                     
