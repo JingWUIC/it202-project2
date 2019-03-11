@@ -17,6 +17,10 @@
         .template {
 			display: none;
 		}
+        #mapView{
+            height: 400px;
+            width: 100%;
+        }
 	</style>
 
 </head>
@@ -54,11 +58,13 @@
         <br>Then, click on the navigation tabs at the top, if you want to view it by <b>List View</b> then click on <b>List</b> otherwise, click on <b>Map</b> for the <b>Map View</b>.
     </p>
     <br>
-    <input type="text" id="searchItem" placeholder="Enter Status or Ward"><br>
+     <label>Ward</label>
+    <input type="text" id="searchItem" placeholder="Enter Ward"><br>
+    <label>Status</label>
     <select id="selectOption">
-        <option value="Ward">Ward</option>
-        <option value="Status">Status</option>
-      </select><br>
+        <option value="Open">Open</option>
+        <option value="Completed">Completed</option>
+    </select><br>
     <button id="searchData">Search</button>
       
   </div>
@@ -81,7 +87,8 @@
 	</div>
   </div>
   <div class="content" id="map">
-    <h2><b>Map View</b></h2> <br>
+    <h2><b>Map View</b></h2>
+    <div id="mapView"></div>
   </div>
   <div class="content" id="about">
       <h1>About Page</h1>
@@ -101,10 +108,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
       
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+   
 
     <script>
 
-     
+     function initMap(){
+            var startLocation = {lat: 41.8781, lng: -87.6298};
+            var createMap = new google.maps.Map(document.getElementById('mapView'), {zoom: 11, center: startLocation});
+            
+     }
 
 
       $(document).ready(function() {
@@ -116,47 +128,57 @@
           $(".content").hide();
         }
 
-        function startMap(){
-            var startLocation = {lat:41.8781, lng:-87.6298};
-        }
+        
 
         $(".nav-link").on("click", function(){
           hide();
           var target = $(this).attr("href");
           $(target).show();
 
-          if(target == "#list") {
-            loadNotesList();
-          }
+          
 
 
 
         });
-
+        function displayMap(data){
+            if(data.length == 0){
+                $("#mapView").append("<h1>No records available.<br></h1>");
+            }
+            else{
+                $.get(data, function(fileData){
+                    $.each(fileData, function(i,v){
+                        var location = {lat: fileData[i].latitude, lng: fileData[i].longitude};
+                        var createMap = new google.maps.Map(document.getElementById('mapView'), {zoom: 11, center: startLocation});
+                    });
+                });
+                    
+                
+            }
+        }
 
         $("#searchData").on("click", function() {
-          var option = $("#selectOption").val();
+          
+          var option = $("#searchItem").val();
+          
           var temp;
           var apiEnd = dataBaseApi;
           $("#cards").empty();
-          if(option == "Ward"){
-              temp = $("#searchItem").val();
-              apiEnd = apiEnd + "?ward=";
-          }
-          else if(option == "Status"){
-              if($("#searchItem").val().toUpperCase() == "COMPLETED"){
+          
+            
+          apiEnd = apiEnd + "?ward=" + option + "&" + "status=";
+          if($("#selectOption").val().toUpperCase() == "COMPLETED"){
                   temp = "Completed";
-              }
-              else if($("#searchItem").val().toUpperCase() == "OPEN"){
+           }
+           else if($("#selectOption").val().toUpperCase() == "OPEN"){
                   temp = "Open";
-              }
-              apiEnd = apiEnd + "?status=";
-         }
+           }
+         
          apiEnd += temp;
          console.log(apiEnd);
          $.get(apiEnd, function(fileData){
              $("#cards").append("<h1>Query returned " + fileData.length + " records</h1>");
              var data = fileData;
+             //displayMap(fileData);
              $.each(data, function(i,v){
                 var cloneCard = $(".template").clone();
                 cloneCard.find(".address").text(v.street_address);
@@ -176,9 +198,10 @@
              });
              
          });
+         
          hide();
          $("#list").show();
-          
+        
           
          
         });
@@ -186,6 +209,8 @@
       });
     </script>
 
-
+   <script async defer
+  src ="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAPIF_1S6CDaBMMlAhaAJisScZdUmSFQo&callback=initMap">
+    </script>
   </body>
 </html>
