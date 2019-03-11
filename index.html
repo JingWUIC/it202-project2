@@ -109,7 +109,8 @@
       
     <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
    
-
+    <script src ="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAPIF_1S6CDaBMMlAhaAJisScZdUmSFQo">
+    </script>
     <script>
 
      function initMap(){
@@ -145,12 +146,16 @@
                 $("#mapView").append("<h1>No records available.<br></h1>");
             }
             else{
-                $.get(data, function(fileData){
-                    $.each(fileData, function(i,v){
-                        var location = {lat: fileData[i].latitude, lng: fileData[i].longitude};
-                        var createMap = new google.maps.Map(document.getElementById('mapView'), {zoom: 11, center: startLocation});
+                var location = {lat: parseFloat(data[0].latitude), lng: parseFloat(data[0].longitude)};
+                var createMap = new google.maps.Map(document.getElementById('mapView'), {zoom: 12, center: location});
+               
+                    $.each(data, function(i,v){
+                        var local = {lat: parseFloat(data[i].latitude), lng: parseFloat(data[i].longitude)};
+                        
+                        var marker = new google.maps.Marker({position: local, map: createMap});
+                        mark.
                     });
-                });
+               
                     
                 
             }
@@ -178,7 +183,7 @@
          $.get(apiEnd, function(fileData){
              $("#cards").append("<h1>Query returned " + fileData.length + " records</h1>");
              var data = fileData;
-             //displayMap(fileData);
+             displayMap(fileData);
              $.each(data, function(i,v){
                 var cloneCard = $(".template").clone();
                 cloneCard.find(".address").text(v.street_address);
@@ -209,8 +214,6 @@
       });
     </script>
 
-   <script async defer
-  src ="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAPIF_1S6CDaBMMlAhaAJisScZdUmSFQo&callback=initMap">
-    </script>
+   
   </body>
 </html>
